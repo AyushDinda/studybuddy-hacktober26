@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>StudyBuddy &bull; Pomodoro, Flashcards & Quiz</title>
+  <meta name="description" content="All-in-one Study Buddy app featuring a customizable Pomodoro timer, interactive 3D flashcards, and custom quizzes.">
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- App Container -->
+  <div class="app-layout">
+    <!-- Header / Navigation -->
+    <header class="app-header">
+      <div class="brand">
+        <div class="brand-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
+            <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
+            <circle cx="12" cy="10" r="3"/>
+          </svg>
+        </div>
+        <div class="brand-text">
+          <h1>StudyBuddy</h1>
+          <span class="badge">Focus &amp; Learn</span>
+        </div>
+      </div>
+
+      <nav class="nav-tabs" role="tablist">
+        <button class="nav-tab active" id="tab-btn-pomodoro" data-tab="pomodoro" role="tab" aria-selected="true">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"></circle>
+            <polyline points="12 6 12 12 16 14"></polyline>
+          </svg>
+          <span>Pomodoro</span>
+        </button>
+        <button class="nav-tab" id="tab-btn-flashcards" data-tab="flashcards" role="tab" aria-selected="false">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
+            <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
+          </svg>
+          <span>Flashcards</span>
+        </button>
+        <button class="nav-tab" id="tab-btn-quiz" data-tab="quiz" role="tab" aria-selected="false">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+            <circle cx="12" cy="12" r="10"></circle>
+            <line x1="12" y1="17" x2="12.01" y2="17"></line>
+          </svg>
+          <span>Quiz Arena</span>
+        </button>
+      </nav>
+
+      <div class="header-actions">
+        <div class="today-stats" title="Completed Pomodoro sessions today">
+          <span class="stat-pill">🔥 <b id="today-pomo-count">0</b> Focus Sessions</span>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Content Area -->
+    <main class="main-content">
+
+      <!-- ================= POMODORO SECTION ================= -->
+      <section id="section-pomodoro" class="tab-pane active" role="tabpanel">
+        <div class="pomo-card">
+          <!-- Mode Selector -->
+          <div class="pomo-modes">
+            <button class="mode-pill active" data-mode="focus" id="pomo-mode-focus">Focus</button>
+            <button class="mode-pill" data-mode="shortBreak" id="pomo-mode-short">Short Break</button>
+            <button class="mode-pill" data-mode="longBreak" id="pomo-mode-long">Long Break</button>
+          </div>
+
+          <!-- Timer Dial / Display -->
+          <div class="timer-dial-wrapper">
+            <svg class="progress-ring" width="300" height="300">
+              <circle class="progress-ring-bg" stroke="rgba(255, 255, 255, 0.08)" stroke-width="12" fill="transparent" r="130" cx="150" cy="150"/>
+              <circle class="progress-ring-fill" id="timer-progress" stroke="url(#timerGradient)" stroke-width="12" stroke-linecap="round" fill="transparent" r="130" cx="150" cy="150"/>
+              <defs>
+                <linearGradient id="timerGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stop-color="#6366f1" />
+                  <stop offset="100%" stop-color="#a855f7" />
+                </linearGradient>
+                <linearGradient id="breakGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stop-color="#10b981" />
+                  <stop offset="100%" stop-color="#06b6d4" />
+                </linearGradient>
+              </defs>
+            </svg>
+
+            <div class="timer-center-content">
+              <span class="timer-status-tag" id="timer-status-text">Ready to Focus</span>
+              <div class="timer-display" id="timer-display">25:00</div>
+              <div class="timer-subtext" id="timer-subtext">Session 1 of 4</div>
+            </div>
+          </div>
+
+          <!-- Controls -->
+          <div class="timer-controls">
+            <button class="btn btn-secondary btn-icon" id="btn-timer-reset" title="Reset Current Timer">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path>
+                <path d="M3 3v5h5"></path>
+              </svg>
+            </button>
+            <button class="btn btn-primary btn-large" id="btn-timer-toggle">
+              <svg class="icon-play" width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                <polygon points="5 3 19 12 5 21 5 3"></polygon>
+              </svg>
+              <svg class="icon-pause hidden" width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                <rect x="6" y="4" width="4" height="16"></rect>
+                <rect x="14" y="4" width="4" height="16"></rect>
+              </svg>
+              <span id="btn-timer-text">Start Focus</span>
+            </button>
+            <button class="btn btn-secondary btn-icon" id="btn-timer-skip" title="Skip to Next Session">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polygon points="5 4 15 12 5 20 5 4"></polygon>
+                <line x1="19" y1="5" x2="19" y2="19"></line>
+              </svg>
+            </button>
+          </div>
+
+          <!-- Quick Duration Settings & Sound Toggle -->
+          <div class="pomo-settings-bar">
+            <div class="setting-group">
+              <label for="custom-focus-min">Focus (min):</label>
+              <input type="number" id="custom-focus-min" min="1" max="120" value="25" class="input-mini">
+            </div>
+            <div class="setting-group">
+              <label for="custom-short-min">Break (min):</label>
+              <input type="number" id="custom-short-min" min="1" max="60" value="5" class="input-mini">
+            </div>
+            <div class="setting-group">
+              <label for="custom-long-min">Long Break:</label>
+              <input type="number" id="custom-long-min" min="1" max="60" value="15" class="input-mini">
+            </div>
+            <button class="btn-text-action" id="btn-apply-pomo-settings">Apply</button>
+            <div class="sound-toggle-group">
+              <button class="btn-sound-toggle" id="btn-sound-toggle" title="Toggle Sound Chimes">
+                <span id="sound-icon">🔊</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= FLASHCARDS SECTION ================= -->
+      <section id="section-flashcards" class="tab-pane" role="tabpanel">
+        <div class="flashcards-container">
+          <!-- Top Bar: Deck Selector & Action Buttons -->
+          <div class="deck-header-bar">
+            <div class="deck-select-group">
+              <label for="deck-select">Current Deck:</label>
+              <select id="deck-select" class="custom-select"></select>
+            </div>
+            <div class="deck-actions">
+              <button class="btn btn-secondary btn-sm" id="btn-manage-decks">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                New Deck
+              </button>
+              <button class="btn btn-primary btn-sm" id="btn-add-card">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                Add Flashcard
+              </button>
+              <button class="btn btn-ghost btn-sm" id="btn-delete-deck" title="Delete this deck">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+              </button>
+            </div>
+          </div>
+
+          <!-- Flashcard Viewport -->
+          <div class="flashcard-stage" id="flashcard-stage">
+            <div class="flashcard-meta">
+              <span class="card-counter" id="card-counter">Card 1 of 5</span>
+              <span class="card-deck-name" id="card-deck-name">Deck: Web Dev</span>
+              <span class="card-status-badge" id="card-mastery-badge">New</span>
+            </div>
+
+            <!-- 3D Flippable Card -->
+            <div class="flashcard" id="active-flashcard" tabindex="0" role="button" aria-label="Click or press Space to flip flashcard">
+              <div class="card-inner">
+                <!-- Card Front -->
+                <div class="card-face card-front">
+                  <div class="face-tag">Question / Prompt</div>
+                  <div class="face-text" id="card-front-text">What does HTML stand for?</div>
+                  <div class="card-hint">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/></svg>
+                    Click or hit Space to flip
+                  </div>
+                </div>
+                <!-- Card Back -->
+                <div class="card-face card-back">
+                  <div class="face-tag">Answer &amp; Explanation</div>
+                  <div class="face-text" id="card-back-text">HyperText Markup Language</div>
+                  <div class="card-hint">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/></svg>
+                    Click or hit Space to flip back
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Card Actions: Flip, Prev, Next, Shuffle, Delete, Mastery -->
+            <div class="card-controls">
+              <button class="btn btn-secondary" id="btn-card-prev" title="Previous Card (Left Arrow)">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"></polyline></svg>
+                Prev
+              </button>
+              
+              <div class="card-eval-buttons">
+                <button class="btn btn-outline-warning" id="btn-mark-learning" title="Still learning this card">
+                  🤔 Still Learning
+                </button>
+                <button class="btn btn-outline-success" id="btn-mark-mastered" title="Mastered this card">
+                  ✅ Got It!
+                </button>
+              </div>
+
+              <button class="btn btn-secondary" id="btn-card-next" title="Next Card (Right Arrow)">
+                Next
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg>
+              </button>
+            </div>
+
+            <div class="card-sub-tools">
+              <button class="btn-sub-tool" id="btn-shuffle-deck" title="Shuffle Cards">
+                🔀 Shuffle
+              </button>
+              <button class="btn-sub-tool" id="btn-edit-card" title="Edit this card">
+                ✏️ Edit Card
+              </button>
+              <button class="btn-sub-tool btn-danger-text" id="btn-delete-card" title="Delete this card">
+                🗑️ Delete Card
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= QUIZ ARENA SECTION ================= -->
+      <section id="section-quiz" class="tab-pane" role="tabpanel">
+        <div class="quiz-container">
+          
+          <!-- Quiz Setup View -->
+          <div class="quiz-view" id="quiz-setup-view">
+            <div class="quiz-hero">
+              <h2>🧠 Quiz Arena</h2>
+              <p>Test your knowledge! You can take a customized quiz generated from any deck, or set your own custom questions.</p>
+            </div>
+
+            <div class="quiz-config-card">
+              <div class="quiz-config-tabs">
+                <button class="config-tab-btn active" id="btn-mode-deck-quiz">Generate From Flashcard Deck</button>
+                <button class="config-tab-btn" id="btn-mode-custom-quiz">Custom Quiz Creator</button>
+              </div>
+
+              <!-- Option A: Deck based Quiz Setup -->
+              <div id="deck-quiz-options" class="config-panel active">
+                <div class="form-group">
+                  <label for="quiz-deck-select">Select Flashcard Deck to Quiz On:</label>
+                  <select id="quiz-deck-select" class="custom-select"></select>
+                </div>
+                <div class="form-row">
+                  <div class="form-group">
+                    <label for="quiz-question-count">Number of Questions:</label>
+                    <select id="quiz-question-count" class="custom-select">
+                      <option value="5">5 Questions</option>
+                      <option value="10" selected>10 Questions</option>
+                      <option value="all">All Cards in Deck</option>
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <label for="quiz-time-limit">Timer Per Question:</label>
+                    <select id="quiz-time-limit" class="custom-select">
+                      <option value="0">No Timer (Relaxed)</option>
+                      <option value="15">15 Seconds (Fast)</option>
+                      <option value="30" selected>30 Seconds (Standard)</option>
+                      <option value="60">60 Seconds (Deep Think)</option>
+                    </select>
+                  </div>
+                </div>
+                <button class="btn btn-primary btn-large btn-block" id="btn-start-deck-quiz">
+                  🚀 Launch Deck Quiz
+                </button>
+              </div>
+
+              <!-- Option B: Custom Questions Builder -->
+              <div id="custom-quiz-options" class="config-panel">
+                <div class="custom-questions-header">
+                  <div>
+                    <h3>Custom Questions Bank</h3>
+                    <p class="subtext">Add your own specific quiz questions with 4 choices and an answer.</p>
+                  </div>
+                  <button class="btn btn-secondary btn-sm" id="btn-add-custom-question">
+                    + Add New Question
+                  </button>
+                </div>
+
+                <div class="custom-questions-list" id="custom-questions-list">
+                  <!-- Dynamically populated -->
+                </div>
+
+                <div class="form-row" style="margin-top: 1.5rem;">
+                  <div class="form-group">
+                    <label for="custom-quiz-time-limit">Timer Per Question:</label>
+                    <select id="custom-quiz-time-limit" class="custom-select">
+                      <option value="0">No Timer</option>
+                      <option value="15">15s</option>
+                      <option value="30" selected>30s</option>
+                      <option value="60">60s</option>
+                    </select>
+                  </div>
+                </div>
+
+                <button class="btn btn-primary btn-large btn-block" id="btn-start-custom-quiz">
+                  🎯 Launch Custom Quiz
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Active Quiz Gameplay View -->
+          <div class="quiz-view hidden" id="quiz-play-view">
+            <div class="quiz-play-card">
+              <!-- Quiz Top Bar -->
+              <div class="quiz-play-header">
+                <div class="quiz-step-info">
+                  Question <span id="quiz-current-num">1</span> of <span id="quiz-total-num">5</span>
+                </div>
+                <div class="quiz-timer-pill hidden" id="quiz-timer-pill">
+                  ⏱️ <span id="quiz-timer-val">30</span>s
+                </div>
+                <div class="quiz-score-pill">
+                  Score: <span id="quiz-current-score">0</span>
+                </div>
+              </div>
+
+              <!-- Progress bar -->
+              <div class="quiz-progress-track">
+                <div class="quiz-progress-bar" id="quiz-progress-bar" style="width: 20%;"></div>
+              </div>
+
+              <!-- Question text -->
+              <div class="quiz-question-box">
+                <h3 id="quiz-question-text">Question prompt goes here?</h3>
+              </div>
+
+              <!-- Options Grid -->
+              <div class="quiz-options-grid" id="quiz-options-grid">
+                <!-- Populated dynamically: 4 option buttons -->
+              </div>
+
+              <!-- Feedback / Explanation Footer -->
+              <div class="quiz-feedback-box hidden" id="quiz-feedback-box">
+                <div class="feedback-indicator" id="feedback-indicator">
+                  <span class="feedback-icon" id="feedback-icon">✓</span>
+                  <span class="feedback-title" id="feedback-title">Correct! Well done!</span>
+                </div>
+                <p class="feedback-explanation" id="feedback-explanation"></p>
+                <button class="btn btn-primary" id="btn-next-quiz-question">Next Question &rarr;</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Quiz Results View -->
+          <div class="quiz-view hidden" id="quiz-results-view">
+            <div class="quiz-result-card">
+              <div class="result-badge-icon" id="result-badge-icon">🏆</div>
+              <h2 id="result-title">Quiz Completed!</h2>
+              <p class="result-subtext" id="result-subtext">You demonstrated great knowledge.</p>
+
+              <div class="result-score-circle">
+                <span class="score-pct" id="result-pct">80%</span>
+                <span class="score-detail" id="result-detail">4 of 5 Correct</span>
+              </div>
+
+              <div class="result-actions">
+                <button class="btn btn-secondary" id="btn-quiz-retry">Try Again</button>
+                <button class="btn btn-primary" id="btn-quiz-back-setup">Back to Quiz Hub</button>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- ================= MODALS ================= -->
+
+  <!-- Modal: Create / Edit Flashcard -->
+  <div class="modal-backdrop hidden" id="modal-card">
+    <div class="modal-window">
+      <div class="modal-header">
+        <h3 id="modal-card-title">Add New Flashcard</h3>
+        <button class="btn-close-modal" id="btn-close-card-modal">&times;</button>
+      </div>
+      <form id="form-card" class="modal-form">
+        <div class="form-group">
+          <label for="input-card-front">Front (Prompt / Question):</label>
+          <textarea id="input-card-front" rows="3" placeholder="e.g. What is the difference between let and const?" required></textarea>
+        </div>
+        <div class="form-group">
+          <label for="input-card-back">Back (Answer / Explanation):</label>
+          <textarea id="input-card-back" rows="3" placeholder="e.g. let allows reassignment, while const creates an immutable binding." required></textarea>
+        </div>
+        <div class="modal-actions">
+          <button type="button" class="btn btn-secondary" id="btn-cancel-card-modal">Cancel</button>
+          <button type="submit" class="btn btn-primary" id="btn-save-card">Save Flashcard</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal: Create New Deck -->
+  <div class="modal-backdrop hidden" id="modal-deck">
+    <div class="modal-window">
+      <div class="modal-header">
+        <h3>Create New Deck</h3>
+        <button class="btn-close-modal" id="btn-close-deck-modal">&times;</button>
+      </div>
+      <form id="form-deck" class="modal-form">
+        <div class="form-group">
+          <label for="input-deck-name">Deck Name:</label>
+          <input type="text" id="input-deck-name" placeholder="e.g. Spanish Vocabulary, Biology 101" required>
+        </div>
+        <div class="modal-actions">
+          <button type="button" class="btn btn-secondary" id="btn-cancel-deck-modal">Cancel</button>
+          <button type="submit" class="btn btn-primary" id="btn-save-deck">Create Deck</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal: Custom Quiz Question Editor -->
+  <div class="modal-backdrop hidden" id="modal-custom-question">
+    <div class="modal-window modal-lg">
+      <div class="modal-header">
+        <h3 id="modal-custom-q-title">Add Custom Quiz Question</h3>
+        <button class="btn-close-modal" id="btn-close-custom-q-modal">&times;</button>
+      </div>
+      <form id="form-custom-question" class="modal-form">
+        <div class="form-group">
+          <label for="input-custom-q-text">Question:</label>
+          <input type="text" id="input-custom-q-text" placeholder="e.g. Which planet is closest to the Sun?" required>
+        </div>
+        <div class="form-group">
+          <label>Options (Select the radio of the correct answer):</label>
+          <div class="option-input-row">
+            <input type="radio" name="custom-q-correct" value="0" checked id="radio-opt-0">
+            <input type="text" class="input-option" id="input-opt-0" placeholder="Option 1 (e.g. Mercury)" required>
+          </div>
+          <div class="option-input-row">
+            <input type="radio" name="custom-q-correct" value="1" id="radio-opt-1">
+            <input type="text" class="input-option" id="input-opt-1" placeholder="Option 2 (e.g. Venus)" required>
+          </div>
+          <div class="option-input-row">
+            <input type="radio" name="custom-q-correct" value="2" id="radio-opt-2">
+            <input type="text" class="input-option" id="input-opt-2" placeholder="Option 3 (e.g. Earth)" required>
+          </div>
+          <div class="option-input-row">
+            <input type="radio" name="custom-q-correct" value="3" id="radio-opt-3">
+            <input type="text" class="input-option" id="input-opt-3" placeholder="Option 4 (e.g. Mars)" required>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="input-custom-q-explain">Explanation / Note (Optional):</label>
+          <input type="text" id="input-custom-q-explain" placeholder="e.g. Mercury orbits closest to the Sun at about 36 million miles.">
+        </div>
+        <div class="modal-actions">
+          <button type="button" class="btn btn-secondary" id="btn-cancel-custom-q-modal">Cancel</button>
+          <button type="submit" class="btn btn-primary">Save Question</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Notification Toast -->
+  <div class="toast-container" id="toast-container"></div>
+
+  <script src="app.js"></script>
+</body>
+</html>
