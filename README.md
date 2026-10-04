@@ -57,7 +57,7 @@ The goal was to make revision feel less like a collection of disconnected tasks 
 
 > Add your deployed StudyBuddy URL here after deployment.
 
-`https://your-deployed-studybuddy-url.com`
+`https://github.com/AyushDinda/studybuddy-hacktober26`
 
 ### Video Demo
 
